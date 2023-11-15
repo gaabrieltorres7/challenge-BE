@@ -9,3 +9,91 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+  updated_at    DateTime @default(now())
+  type          UserType @default(CLIENT)
+  client        Client?
+
+  @@map("users")
+}
+
+model Client {
+  id         String   @id @default(uuid())
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    String   @unique
+  full_name  String
+  contact    String
+  address    String
+  status     Boolean  @default(true)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+  orders     Order[]
+
+  @@map("clients")
+}
+
+model Product {
+  id             String      @id @default(uuid())
+  name           String
+  description    String
+  price          Decimal
+  stock_quantity Int
+  created_at     DateTime    @default(now())
+  updated_at     DateTime    @default(now())
+  OrderItem      OrderItem[]
+
+  @@map("products")
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  client_id    String
+  client       Client      @relation(fields: [client_id], references: [id])
+  order_status OrderStatus
+  order_date   DateTime    @default(now())
+  total        Decimal
+  OrderItem    OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String  @id @default(uuid())
+  order_id   String
+  product_id String
+  order      Order   @relation(fields: [order_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id])
+  quantity   Int
+  unit_price Decimal
+  subtotal   Decimal
+
+  @@map("order_items")
+}
+
+model SalesReport {
+  id            String   @id @default(uuid())
+  time_period   DateTime
+  sales_amount  Decimal
+  sold_products Int
+  file_path     String
+
+  @@map("sales_reports")
+}
+
+enum UserType {
+  ADMIN
+  CLIENT
+}
+
+enum OrderStatus {
+  RECEIVED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+}
