@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: challengeAppContainer
+    environment:
+      TZ: America/Sao_Paulo
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    volumes:
+      - .:/usr/app
+    network_mode: host
