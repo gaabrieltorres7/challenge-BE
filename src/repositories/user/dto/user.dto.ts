@@ -32,7 +32,3 @@ export type UpdateUserDTO = {
   password_hash?: string
   type?: 'ADMIN' | 'CLIENT'
 }
-
-export type DeleteUserDTO = {
-  id: string
-}
