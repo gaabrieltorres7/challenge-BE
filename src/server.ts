@@ -1,8 +1,10 @@
+import ClientRoute from '@/http/controllers/client/routes'
 import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { InvalidCredentialsError } from './use-cases/errors/invalid-credentials-error'
 import { ResourceNotFoundError } from './use-cases/errors/resource-not-found-error'
+import { UserAlreadyAssociatedError } from './use-cases/errors/user-already-associated-error'
 import { UserAlreadyExistsError } from './use-cases/errors/user-already-exists-error'
 
 const app = express()
@@ -11,12 +13,16 @@ const port = process.env.PORT || 3000
 app.use(express.json())
 
 app.use('/users', UserRoute)
+app.use('/clients', ClientRoute)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   let statusCode = 500
   let errorMessage = 'Internal server error'
 
-  if (err instanceof UserAlreadyExistsError) {
+  if (
+    err instanceof UserAlreadyExistsError ||
+    err instanceof UserAlreadyAssociatedError
+  ) {
     statusCode = 409
   } else if (err instanceof InvalidCredentialsError) {
     statusCode = 400
