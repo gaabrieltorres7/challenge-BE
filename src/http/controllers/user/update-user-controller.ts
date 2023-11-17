@@ -15,6 +15,13 @@ export async function UpdateUserController(req: Request, res: Response) {
 
   try {
     const data = updateBodySchema.parse(req.body)
+
+    if (req.user.type === 'CLIENT' && req.user.id !== id) {
+      return res
+        .status(401)
+        .json({ message: 'You can only edit your own data' })
+    }
+
     const updateUserUseCase = makeUpdateUser()
     const user = await updateUserUseCase.execute(id, data)
 
