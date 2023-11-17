@@ -16,3 +16,23 @@ export type UserLoginDTO = {
   email: string
   password: string
 }
+
+export type GetUsersDTO = {
+  skip?: number
+  take?: number
+}
+
+export type GetUserDTO = {
+  id: string
+}
+
+export type UpdateUserDTO = {
+  name?: string
+  email?: string
+  password_hash?: string
+  type?: 'ADMIN' | 'CLIENT'
+}
+
+export type DeleteUserDTO = {
+  id: string
+}
