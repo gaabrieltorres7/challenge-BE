@@ -2,6 +2,7 @@ import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { InvalidCredentialsError } from './use-cases/errors/invalid-credentials-error'
+import { ResourceNotFoundError } from './use-cases/errors/resource-not-found-error'
 import { UserAlreadyExistsError } from './use-cases/errors/user-already-exists-error'
 
 const app = express()
@@ -19,6 +20,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     statusCode = 409
   } else if (err instanceof InvalidCredentialsError) {
     statusCode = 400
+  } else if (err instanceof ResourceNotFoundError) {
+    statusCode = 404
   }
   if (statusCode !== 500) {
     errorMessage = err.message
