@@ -1,8 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "windows", "debian-openssl-1.1.x", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
 }
 
 datasource db {
@@ -18,6 +16,7 @@ model User {
   created_at    DateTime @default(now())
   updated_at    DateTime @default(now())
   type          UserType @default(CLIENT)
+  is_confirmed  Boolean  @default(false)
   client        Client?
 
   @@map("users")
@@ -25,7 +24,6 @@ model User {
 
 model Client {
   id         String   @id @default(uuid())
-  user       User     @relation(fields: [user_id], references: [id])
   user_id    String   @unique
   full_name  String
   contact    String
@@ -33,6 +31,7 @@ model Client {
   status     Boolean  @default(true)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id])
   orders     Order[]
 
   @@map("clients")
@@ -54,11 +53,11 @@ model Product {
 model Order {
   id           String      @id @default(uuid())
   client_id    String
-  client       Client      @relation(fields: [client_id], references: [id])
   order_status OrderStatus
   order_date   DateTime    @default(now())
   total        Decimal
   OrderItem    OrderItem[]
+  client       Client      @relation(fields: [client_id], references: [id])
 
   @@map("orders")
 }
@@ -67,11 +66,11 @@ model OrderItem {
   id         String  @id @default(uuid())
   order_id   String
   product_id String
-  order      Order   @relation(fields: [order_id], references: [id])
-  product    Product @relation(fields: [product_id], references: [id])
   quantity   Int
   unit_price Decimal
   subtotal   Decimal
+  order      Order   @relation(fields: [order_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id])
 
   @@map("order_items")
 }
