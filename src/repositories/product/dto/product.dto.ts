@@ -15,11 +15,6 @@ export type CreatedProductDTO = {
   // OrderItem: any[]
 } & CreateProductDTO
 
-export type GetProductsDTO = {
-  skip?: number
-  take?: number
-}
-
 export type GetProductDTO = {
   id: string
 }
