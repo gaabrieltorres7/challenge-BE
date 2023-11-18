@@ -9,10 +9,10 @@ export class GetClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
 
   async execute({ id }: GetClientDTO): Promise<CreatedClientDTO | null> {
-    const user = await this.clientRepository.findById(id)
+    const client = await this.clientRepository.findById(id)
 
-    if (!user) throw new ResourceNotFoundError()
+    if (!client) throw new ResourceNotFoundError()
 
-    return user
+    return client
   }
 }
