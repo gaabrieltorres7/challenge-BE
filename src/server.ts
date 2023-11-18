@@ -1,4 +1,5 @@
 import ClientRoute from '@/http/controllers/client/routes'
+import OrderItemRoute from '@/http/controllers/order-item/routes'
 import OrderRoute from '@/http/controllers/order/routes'
 import ProductRoute from '@/http/controllers/product/routes'
 import UserRoute from '@/http/controllers/user/routes'
@@ -19,6 +20,7 @@ app.use('/users', UserRoute)
 app.use('/clients', ClientRoute)
 app.use('/products', ProductRoute)
 app.use('/orders', OrderRoute)
+app.use('/orders-item', OrderItemRoute)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   let statusCode = 500
