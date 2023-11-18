@@ -5,9 +5,9 @@ export class DeleteClientUseCase {
   constructor(private clientRepository: IClientRepository) {}
 
   async execute(id: string): Promise<boolean> {
-    const user = await this.clientRepository.findById(id)
+    const client = await this.clientRepository.findById(id)
 
-    if (!user) throw new ResourceNotFoundError()
+    if (!client) throw new ResourceNotFoundError()
 
     await this.clientRepository.delete(id)
 

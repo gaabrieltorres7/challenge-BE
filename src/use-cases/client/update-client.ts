@@ -12,9 +12,9 @@ export class UpdateClientUseCase {
     id: string,
     data: UpdateClientDTO,
   ): Promise<CreatedClientDTO | null> {
-    const user = await this.clientRepository.findById(id)
+    const client = await this.clientRepository.findById(id)
 
-    if (!user) throw new ResourceNotFoundError()
+    if (!client) throw new ResourceNotFoundError()
 
     const updatedClient = await this.clientRepository.update(id, data)
 
