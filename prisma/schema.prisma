@@ -53,9 +53,9 @@ model Product {
 model Order {
   id           String      @id @default(uuid())
   client_id    String
-  order_status OrderStatus
+  order_status OrderStatus @default(RECEIVED)
   order_date   DateTime    @default(now())
-  total        Decimal
+  total        Decimal     @default(0)
   OrderItem    OrderItem[]
   client       Client      @relation(fields: [client_id], references: [id])
 
