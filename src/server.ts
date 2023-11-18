@@ -1,4 +1,5 @@
 import ClientRoute from '@/http/controllers/client/routes'
+import OrderRoute from '@/http/controllers/order/routes'
 import ProductRoute from '@/http/controllers/product/routes'
 import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
@@ -17,6 +18,7 @@ app.use(express.json())
 app.use('/users', UserRoute)
 app.use('/clients', ClientRoute)
 app.use('/products', ProductRoute)
+app.use('/orders', OrderRoute)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   let statusCode = 500
