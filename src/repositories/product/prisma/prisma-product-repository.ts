@@ -28,13 +28,37 @@ export class PrismaProductRepository implements IProductRepository {
     return product
   }
 
-  async findAll(
-    skip?: number,
-    take?: number,
-  ): Promise<CreatedProductDTO[] | null> {
+  async findAll(query: string): Promise<CreatedProductDTO[] | null> {
+    if (!query) return await this.prisma.product.findMany({})
+
+    const lowerCaseQuery = query.toLowerCase()
+    const parsedQuery = parseFloat(lowerCaseQuery)
+
     const products = await this.prisma.product.findMany({
-      skip: skip || 0,
-      take: take || 10,
+      where: {
+        OR: [
+          {
+            name: {
+              contains: lowerCaseQuery,
+            },
+          },
+          {
+            description: {
+              contains: lowerCaseQuery,
+            },
+          },
+          {
+            price: {
+              equals: isNaN(parsedQuery) ? undefined : parsedQuery,
+            },
+          },
+          {
+            stock_quantity: {
+              equals: isNaN(parsedQuery) ? undefined : parseInt(lowerCaseQuery),
+            },
+          },
+        ],
+      },
     })
     return products
   }

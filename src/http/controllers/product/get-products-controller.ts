@@ -2,12 +2,12 @@ import { makeGetProducts } from '@/use-cases/product/factories/make-get-products
 import { Request, Response } from 'express'
 
 export async function GetProductsController(req: Request, res: Response) {
-  const skip = Number(req.query.skip)
-  const take = Number(req.query.take)
+  const { q } = req.query
+  const query = String(q)
 
   try {
     const getProductsUseCase = makeGetProducts()
-    const products = await getProductsUseCase.execute({ skip, take })
+    const products = await getProductsUseCase.execute(query)
 
     return res.status(200).json(products)
   } catch (error) {
