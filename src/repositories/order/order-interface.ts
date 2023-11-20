@@ -11,4 +11,9 @@ export interface IOrderRepository {
   findAll(skip: number, take: number): Promise<CreatedOrderDTO[] | null>
   update(id: string, data: UpdateOrderDTO): Promise<CreatedOrderDTO | null>
   delete(id: string): Promise<boolean>
+  updateStatus(
+    id: string,
+    order_status: 'RECEIVED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED',
+  ): Promise<boolean>
+  updateTotal(id: string, total: number): Promise<boolean>
 }

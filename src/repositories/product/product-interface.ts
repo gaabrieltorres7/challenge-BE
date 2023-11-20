@@ -11,4 +11,5 @@ export interface IProductRepository {
   findAll(query: string): Promise<CreatedProductDTO[] | null>
   update(id: string, data: UpdateProductDTO): Promise<CreatedProductDTO | null>
   delete(id: string): Promise<boolean>
+  debitStock(id: string, quantity: number): Promise<boolean>
 }

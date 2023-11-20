@@ -4,7 +4,7 @@ export type CreateOrderItemDTO = {
   order_id: string
   product_id: string
   quantity: number
-  unit_price: Prisma.Decimal
+  unit_price?: Prisma.Decimal
   subtotal?: Prisma.Decimal
 }
 

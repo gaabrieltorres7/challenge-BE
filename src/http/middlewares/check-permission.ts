@@ -6,7 +6,7 @@ export function checkPermission(allowedTypes: string[]) {
 
     if (!allowedTypes.includes(type)) {
       return res
-        .status(401)
+        .status(403)
         .json({ message: 'Your user type has no permission to do this.' })
     }
 

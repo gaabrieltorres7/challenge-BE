@@ -1,5 +1,6 @@
+import { ActionNotAllowedError } from '@/use-cases/errors/action-not-allowed-error'
+import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
 import { makeCreateOrderItem } from '@/use-cases/order-item/factories/make-create-order-item'
-import { Prisma } from '@prisma/client'
 import { Request, Response } from 'express'
 import { z } from 'zod'
 
@@ -8,31 +9,29 @@ export async function CreateOrderItemController(req: Request, res: Response) {
     order_id: z.string(),
     product_id: z.string(),
     quantity: z.number(),
-    unit_price: z.custom((value: any) => {
-      try {
-        const prismaDecimal = new Prisma.Decimal(value)
-        return prismaDecimal
-      } catch (error) {
-        throw new Error('Invalid Decimal format')
-      }
-    }),
   })
 
   try {
-    const { order_id, product_id, quantity, unit_price } =
-      createOrderItemBodySchema.parse(req.body)
+    const { order_id, product_id, quantity } = createOrderItemBodySchema.parse(
+      req.body,
+    )
 
     const createOrderItem = makeCreateOrderItem()
     await createOrderItem.execute({
       order_id,
       product_id,
       quantity,
-      unit_price,
     })
   } catch (error) {
+    console.log(error)
     if (error instanceof z.ZodError) {
       return res.status(400).json({ message: error.format() })
+    } else if (error instanceof ResourceNotFoundError) {
+      return res.status(404).json({ message: error.message })
+    } else if (error instanceof ActionNotAllowedError) {
+      return res.status(403).json({ message: error.message })
     }
+    console.log(error)
     return res.status(500).send()
   }
 
