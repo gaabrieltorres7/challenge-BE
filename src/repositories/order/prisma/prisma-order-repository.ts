@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import {
   CreateOrderDTO,
   CreatedOrderDTO,
@@ -19,7 +19,10 @@ export class PrismaOrderRepository implements IOrderRepository {
   }
 
   async findById(id: string): Promise<CreatedOrderDTO | null> {
-    const order = await this.prisma.order.findUnique({ where: { id } })
+    const order = await this.prisma.order.findUnique({
+      where: { id },
+      include: { OrderItem: true },
+    })
     return order
   }
 
@@ -49,6 +52,22 @@ export class PrismaOrderRepository implements IOrderRepository {
 
   async delete(id: string): Promise<boolean> {
     await this.prisma.order.delete({ where: { id } })
+    return true
+  }
+
+  async updateStatus(
+    id: string,
+    order_status: 'RECEIVED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED',
+  ): Promise<boolean> {
+    await this.prisma.order.update({ where: { id }, data: { order_status } })
+    return true
+  }
+
+  async updateTotal(id: string, total: number): Promise<boolean> {
+    await this.prisma.order.update({
+      where: { id },
+      data: { total: new Prisma.Decimal(total) },
+    })
     return true
   }
 }

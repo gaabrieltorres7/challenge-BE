@@ -1,12 +1,13 @@
 import { ResourceNotFoundError } from '@/use-cases/errors/resource-not-found-error'
-import { makeUpdateOrder } from '@/use-cases/order/factories/make-update-order'
+import { makeUpdateOrderItem } from '@/use-cases/order-item/factories/make-update-order-item'
 import { Prisma } from '@prisma/client'
 import { Request, Response } from 'express'
 import { z } from 'zod'
 
-export async function UpdateOrderController(req: Request, res: Response) {
+export async function UpdateOrderItemController(req: Request, res: Response) {
   const updateBodySchema = z.object({
-    total: z
+    quantity: z.number().optional(),
+    unit_price: z
       .custom((value: any) => {
         try {
           const prismaDecimal = new Prisma.Decimal(value)
@@ -23,11 +24,12 @@ export async function UpdateOrderController(req: Request, res: Response) {
   try {
     const data = updateBodySchema.parse(req.body)
 
-    const updateOrderUseCase = makeUpdateOrder()
-    const order = await updateOrderUseCase.execute(id, data)
+    const updateOrderItemUseCase = makeUpdateOrderItem()
+    const orderItem = await updateOrderItemUseCase.execute(id, data)
 
-    return res.status(200).json(order)
+    return res.status(200).json(orderItem)
   } catch (error) {
+    console.log(error)
     if (error instanceof ResourceNotFoundError) {
       return res.status(404).json({ message: error.message })
     } else if (error instanceof z.ZodError) {

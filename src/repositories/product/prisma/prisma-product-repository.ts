@@ -78,4 +78,14 @@ export class PrismaProductRepository implements IProductRepository {
     await this.prisma.product.delete({ where: { id } })
     return true
   }
+
+  async debitStock(id: string, quantity: number): Promise<boolean> {
+    await this.prisma.product.update({
+      where: { id },
+      data: {
+        stock_quantity: quantity,
+      },
+    })
+    return true
+  }
 }
