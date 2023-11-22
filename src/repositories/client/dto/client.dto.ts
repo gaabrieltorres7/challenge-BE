@@ -1,3 +1,6 @@
+import { CreatedOrderDTO } from '@/repositories/order/dto/order.dto'
+import { CreatedUserDTO } from '@/repositories/user/dto/user.dto'
+
 export type CreateClientDTO = {
   user_id: string
   full_name: string
@@ -10,8 +13,8 @@ export type CreatedClientDTO = {
   status: boolean
   created_at: Date
   updated_at: Date
-  // user: CreatedUserDTO
-  // orders: any[]
+  user?: CreatedUserDTO
+  orders?: CreatedOrderDTO[]
 } & CreateClientDTO
 
 export type GetClientsDTO = {

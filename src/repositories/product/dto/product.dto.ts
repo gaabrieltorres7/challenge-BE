@@ -1,3 +1,4 @@
+import { CreatedOrderItemDTO } from '@/repositories/order-item/dto/order-item.dto'
 import { Prisma } from '@prisma/client'
 
 export type CreateProductDTO = {
@@ -5,14 +6,13 @@ export type CreateProductDTO = {
   description: string
   price: Prisma.Decimal
   stock_quantity: number
-  // OrderItem: any[]
 }
 
 export type CreatedProductDTO = {
   id: string
   created_at: Date
   updated_at: Date
-  // OrderItem: any[]
+  OrderItem?: CreatedOrderItemDTO[]
 } & CreateProductDTO
 
 export type GetProductDTO = {

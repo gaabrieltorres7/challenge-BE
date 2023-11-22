@@ -26,12 +26,18 @@ export class PrismaClientRepository implements IClientRepository {
   // }
 
   async findById(id: string): Promise<CreatedClientDTO | null> {
-    const client = await this.prisma.client.findUnique({ where: { id } })
+    const client = await this.prisma.client.findUnique({
+      where: { id },
+      include: { user: true, orders: true },
+    })
     return client
   }
 
   async findByUserId(user_id: string): Promise<CreatedClientDTO | null> {
-    const client = await this.prisma.client.findUnique({ where: { user_id } })
+    const client = await this.prisma.client.findUnique({
+      where: { user_id },
+      include: { user: true, orders: true },
+    })
     return client
   }
 
@@ -42,6 +48,7 @@ export class PrismaClientRepository implements IClientRepository {
     const clients = await this.prisma.client.findMany({
       skip: skip || 0,
       take: take || 10,
+      include: { user: true, orders: true },
     })
     return clients
   }
