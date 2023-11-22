@@ -2,6 +2,7 @@ import ClientRoute from '@/http/controllers/client/routes'
 import OrderItemRoute from '@/http/controllers/order-item/routes'
 import OrderRoute from '@/http/controllers/order/routes'
 import ProductRoute from '@/http/controllers/product/routes'
+import SalesReportRoute from '@/http/controllers/sales-report/routes'
 import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
@@ -24,6 +25,7 @@ app.use('/clients', ClientRoute)
 app.use('/products', ProductRoute)
 app.use('/orders', OrderRoute)
 app.use('/orders-item', OrderItemRoute)
+app.use('/sales-reports', SalesReportRoute)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   let statusCode = 500
