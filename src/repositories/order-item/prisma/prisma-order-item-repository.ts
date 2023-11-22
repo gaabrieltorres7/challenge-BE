@@ -19,13 +19,17 @@ export class PrismaOrderItemRepository implements IOrderItemRepository {
   }
 
   async findById(id: string): Promise<CreatedOrderItemDTO | null> {
-    const orderItem = await this.prisma.orderItem.findUnique({ where: { id } })
+    const orderItem = await this.prisma.orderItem.findUnique({
+      where: { id },
+      include: { order: true, product: true },
+    })
     return orderItem
   }
 
   async findByOrderId(order_id: string): Promise<CreatedOrderItemDTO[] | null> {
     const orderItems = await this.prisma.orderItem.findMany({
       where: { order_id },
+      include: { order: true, product: true },
     })
     return orderItems
   }
@@ -37,6 +41,7 @@ export class PrismaOrderItemRepository implements IOrderItemRepository {
     const orderItems = await this.prisma.orderItem.findMany({
       skip: skip || 0,
       take: take || 10,
+      include: { order: true, product: true },
     })
     return orderItems
   }

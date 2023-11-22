@@ -10,8 +10,8 @@ export type CreateOrderItemDTO = {
 
 export type CreatedOrderItemDTO = {
   id: string
-  // order: CreatedOrderDTO
-  // product: CreatedProductDTO
+  // order?: CreatedOrderDTO[]
+  // product?: CreatedProductDTO[]
 } & CreateOrderItemDTO
 
 export type GetOrdersItemDTO = {

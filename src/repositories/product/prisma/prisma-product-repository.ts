@@ -19,12 +19,18 @@ export class PrismaProductRepository implements IProductRepository {
   }
 
   async findById(id: string): Promise<CreatedProductDTO | null> {
-    const product = await this.prisma.product.findUnique({ where: { id } })
+    const product = await this.prisma.product.findUnique({
+      where: { id },
+      include: { OrderItem: true },
+    })
     return product
   }
 
   async findByName(name: string): Promise<CreatedProductDTO | null> {
-    const product = await this.prisma.product.findFirst({ where: { name } })
+    const product = await this.prisma.product.findFirst({
+      where: { name },
+      include: { OrderItem: true },
+    })
     return product
   }
 
@@ -59,6 +65,7 @@ export class PrismaProductRepository implements IProductRepository {
           },
         ],
       },
+      include: { OrderItem: true },
     })
     return products
   }
