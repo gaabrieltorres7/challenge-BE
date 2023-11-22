@@ -7,8 +7,8 @@ export function makeCreateSalesReport() {
   const prisma = new PrismaClient()
   const salesReportRepository = new PrismaSalesReportRepository(prisma)
   const aws = new AWS.S3({
-    accessKeyId: 'AKIAT7W5EQM5H6BPIGKJ',
-    secretAccessKey: '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',
+    accessKeyId: process.env.ACCESS_AWS_KEY,
+    secretAccessKey: process.env.SECRET_AWS_ACCESS_KEY,
     region: 'us-east-1',
   })
 
