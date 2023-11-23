@@ -6,6 +6,8 @@ import SalesReportRoute from '@/http/controllers/sales-report/routes'
 import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
+import swaggerUI from 'swagger-ui-express'
+import swaggerDocs from '../swagger.json'
 import { ActionNotAllowedError } from './use-cases/errors/action-not-allowed-error'
 import { ConfirmPaymentIfThereAreItemsError } from './use-cases/errors/confirm-payment-if-there-are-items-error'
 import { InsufficientStockError } from './use-cases/errors/insufficient-stock-error'
@@ -20,6 +22,8 @@ const app = express()
 const port = process.env.PORT || 3000
 
 app.use(express.json())
+
+app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 app.use('/users', UserRoute)
 app.use('/clients', ClientRoute)

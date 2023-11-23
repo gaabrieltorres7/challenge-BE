@@ -22,7 +22,7 @@ export async function ConfirmUserLoginController(req: Request, res: Response) {
 
         await user.validateUser(decoded.email)
 
-        return res.status(201).json({
+        return res.status(200).json({
           message: 'Account has been activated successfully',
         })
       },
