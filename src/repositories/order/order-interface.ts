@@ -8,7 +8,7 @@ export interface IOrderRepository {
   create(data: CreateOrderDTO): Promise<CreatedOrderDTO>
   findById(id: string): Promise<CreatedOrderDTO | null>
   findByClientId(client_id: string): Promise<CreatedOrderDTO[] | null>
-  findAll(skip: number, take: number): Promise<CreatedOrderDTO[] | null>
+  findAll(startDate: string, endDate: string): Promise<CreatedOrderDTO[] | null>
   update(id: string, data: UpdateOrderDTO): Promise<CreatedOrderDTO | null>
   delete(id: string): Promise<boolean>
   updateStatus(

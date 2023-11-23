@@ -16,8 +16,8 @@ export type CreatedOrderDTO = {
 } & CreateOrderDTO
 
 export type GetOrdersDTO = {
-  skip?: number
-  take?: number
+  startDate?: string
+  endDate?: string
 }
 
 export type GetOrderDTO = {

@@ -31,7 +31,7 @@ model Client {
   status     Boolean  @default(true)
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
   orders     Order[]
 
   @@map("clients")
@@ -57,7 +57,7 @@ model Order {
   order_date   DateTime    @default(now())
   total        Decimal     @default(0)
   OrderItem    OrderItem[]
-  client       Client      @relation(fields: [client_id], references: [id])
+  client       Client      @relation(fields: [client_id], references: [id], onDelete: Cascade)
 
   @@map("orders")
 }
@@ -69,7 +69,7 @@ model OrderItem {
   quantity   Int
   unit_price Decimal
   subtotal   Decimal
-  order      Order   @relation(fields: [order_id], references: [id])
+  order      Order   @relation(fields: [order_id], references: [id], onDelete: Cascade)
   product    Product @relation(fields: [product_id], references: [id])
 
   @@map("order_items")

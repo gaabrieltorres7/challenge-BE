@@ -7,6 +7,7 @@ import UserRoute from '@/http/controllers/user/routes'
 import express, { NextFunction, Request, Response } from 'express'
 import 'express-async-errors'
 import { ActionNotAllowedError } from './use-cases/errors/action-not-allowed-error'
+import { ConfirmPaymentIfThereAreItemsError } from './use-cases/errors/confirm-payment-if-there-are-items-error'
 import { InsufficientStockError } from './use-cases/errors/insufficient-stock-error'
 import { InvalidCredentialsError } from './use-cases/errors/invalid-credentials-error'
 import { PaymentNotApprovedError } from './use-cases/errors/payment-not-approved-error'
@@ -40,7 +41,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   } else if (
     err instanceof InvalidCredentialsError ||
     err instanceof PaymentNotApprovedError ||
-    err instanceof InsufficientStockError
+    err instanceof InsufficientStockError ||
+    err instanceof ConfirmPaymentIfThereAreItemsError
   ) {
     statusCode = 400
   } else if (err instanceof ResourceNotFoundError) {
