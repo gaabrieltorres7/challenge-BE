@@ -22,7 +22,10 @@ export async function UpdateClientController(req: Request, res: Response) {
     const clientRepo = new PrismaClientRepository(prisma)
     const clientExists = await clientRepo.findByUserId(user_id)
 
-    if (req.user.type === 'CLIENT' && clientExists?.user_id !== user_id) {
+    if (
+      req.user.type === 'CLIENT' &&
+      (clientExists?.user_id !== user_id || id !== clientExists?.id)
+    ) {
       return res
         .status(401)
         .json({ message: 'You can only edit your own data' })

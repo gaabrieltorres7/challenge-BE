@@ -2,13 +2,16 @@ import { makeGetOrders } from '@/use-cases/order/factories/make-get-orders'
 import { Request, Response } from 'express'
 
 export async function GetOrdersController(req: Request, res: Response) {
-  const skip = Number(req.query.skip)
-  const take = Number(req.query.take)
+  const { startDate, endDate } = req.query
+  const start = String(startDate)
+  const end = String(endDate)
 
   try {
     const getOrdersUseCase = makeGetOrders()
-    const orders = await getOrdersUseCase.execute({ skip, take })
-
+    const orders = await getOrdersUseCase.execute({
+      startDate: start,
+      endDate: end,
+    })
     return res.status(200).json(orders)
   } catch (error) {
     console.log(error)

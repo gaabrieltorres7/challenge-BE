@@ -1,6 +1,7 @@
 import { IOrderItemRepository } from '@/repositories/order-item/order-item-interface'
 import { IOrderRepository } from '@/repositories/order/order-interface'
 import { IProductRepository } from '@/repositories/product/product-interface'
+import { ConfirmPaymentIfThereAreItemsError } from '../errors/confirm-payment-if-there-are-items-error'
 import { InsufficientStockError } from '../errors/insufficient-stock-error'
 import { PaymentNotApprovedError } from '../errors/payment-not-approved-error'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
@@ -24,7 +25,7 @@ export class ConfirmPaymentUseCase {
     const orderItems = await this.orderItemRepository.findByOrderId(order_id)
 
     if (!orderItems || orderItems.length === 0) {
-      throw new ResourceNotFoundError()
+      throw new ConfirmPaymentIfThereAreItemsError()
     }
 
     // Verificando se há tipos diferentes de produtos no pedido

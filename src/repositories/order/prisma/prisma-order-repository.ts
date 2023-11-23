@@ -35,12 +35,24 @@ export class PrismaOrderRepository implements IOrderRepository {
   }
 
   async findAll(
-    skip?: number,
-    take?: number,
+    startDate: string,
+    endDate: string,
   ): Promise<CreatedOrderDTO[] | null> {
     const orders = await this.prisma.order.findMany({
-      skip: skip || 0,
-      take: take || 10,
+      where: {
+        AND: [
+          {
+            order_date: {
+              gte: new Date(startDate),
+            },
+          },
+          {
+            order_date: {
+              lte: new Date(endDate),
+            },
+          },
+        ],
+      },
       include: { OrderItem: true, client: true },
     })
     return orders

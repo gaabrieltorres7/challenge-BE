@@ -21,15 +21,17 @@ export class CreateSalesReportUseCase {
           SUM(oi.subtotal) AS total_amount
         FROM
           "order_items" oi
-        JOIN "products" p ON oi.product_id = p.id
-        JOIN "orders" o ON oi.order_id = o.id
+        JOIN
+          "products" p ON oi.product_id = p.id
+        JOIN
+          "orders" o ON oi.order_id = o.id
         WHERE
           o.order_date BETWEEN to_timestamp(${startDate}, 'YYYY-MM-DD') AND to_timestamp(${endDate}, 'YYYY-MM-DD')
+        AND o.order_status <> 'RECEIVED'
         GROUP BY
           p.name;
         `
 
-      // tenho que converter os valores para number
       const salesDataForCSV = salesData.map((entry) => ({
         product_name: entry.product_name,
         total_quantity: Number(entry.total_quantity),
@@ -58,10 +60,15 @@ export class CreateSalesReportUseCase {
         0,
       )
 
+      const salesQuantity = salesDataForCSV.reduce(
+        (sum: number, entry) => sum + entry.total_quantity,
+        0,
+      )
+
       const salesReport = await this.salesReportRepository.create({
         time_period: new Date(),
         sales_amount: salesAmount,
-        sold_products: salesDataForCSV.length,
+        sold_products: salesQuantity,
         file_path: `s3://${s3Params.Bucket}/${s3Params.Key}`,
       })
 

@@ -41,7 +41,6 @@ export async function UpdateSalesReportController(req: Request, res: Response) {
     } else if (error instanceof z.ZodError) {
       return res.status(400).json({ message: error.format() })
     }
-    console.log(error)
     return res.status(500).json({ error })
   }
 }

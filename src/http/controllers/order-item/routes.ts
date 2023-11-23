@@ -1,5 +1,5 @@
 import { Authentication } from '@/http/middlewares/auth'
-// import { checkPermission } from '@/http/middlewares/check-permission'
+import { checkPermission } from '@/http/middlewares/check-permission'
 import { Router } from 'express'
 import { CreateOrderItemController } from './create-order-item-controller'
 import { DeleteOrderItemController } from './delete-order-item-controller'
@@ -13,7 +13,7 @@ router.use(Authentication)
 
 router.post('/create', (req, res) => CreateOrderItemController(req, res))
 
-// router.use(checkPermission(['ADMIN']))
+router.use(checkPermission(['ADMIN']))
 
 router.put('/update/:id', (req, res) => UpdateOrderItemController(req, res))
 router.get('/', (req, res) => GetOrdersItemController(req, res))

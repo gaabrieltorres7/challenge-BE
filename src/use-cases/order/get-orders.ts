@@ -8,10 +8,13 @@ export class GetOrdersUseCase {
   constructor(private orderRepository: IOrderRepository) {}
 
   async execute({
-    skip = 0,
-    take = 10,
+    startDate,
+    endDate,
   }: GetOrdersDTO): Promise<CreatedOrderDTO[] | null> {
-    const orders = await this.orderRepository.findAll(skip, take)
+    const searchTerm1 = startDate !== 'undefined' ? startDate : '2023-01-01'
+    const searchTerm2 = endDate !== 'undefined' ? endDate : '2024-01-01'
+
+    const orders = await this.orderRepository.findAll(searchTerm1, searchTerm2)
     return orders
   }
 }
