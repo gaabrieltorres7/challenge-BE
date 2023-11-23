@@ -1,0 +1,546 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Challenge LOOMI",
+    "description": "API que fiz para o desafio da LOOMI",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Gabriel Torres",
+      "email": "gaabrieltt7@gmail.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "base url"
+    }
+  ],
+  "paths": {
+    "/users/login": {
+      "post": {
+        "summary": "Login",
+        "tags": [
+          "Authentication"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCredentials"
+              },
+              "examples": {
+                "LoginCredentials": {
+                  "value": {
+                    "email": "teste@teste.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Email not confirmed. Please check your email for confirmation instructions."
+          },
+          "400": {
+            "description": "Invalid credentials || Field validation error"
+          },
+          "200": {
+            "description": "User logged in successfully"
+          }
+        }
+      }
+    },
+    "/users/confirm": {
+      "get": {
+        "summary": "Confirmar o email para conseguir logar",
+        "tags": [
+          "Authentication"
+        ],
+        "responses": {
+          "200": {
+            "description": "Account has been activated successfully"
+          },
+          "498": {
+            "description": "Invalid token."
+          }
+        }
+      }
+    },
+    "/users/create": {
+      "post": {
+        "summary": "Create User",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "name": "John Doe",
+                    "email": "teste@teste.com",
+                    "password": "123456"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "409": {
+            "description": "Email already exists"
+          },
+          "201": {
+            "description": "User has been created successfully"
+          },
+          "400": {
+            "description": "Field validation error"
+          }
+        }
+      }
+    },
+    "/users/update/{id}": {
+      "put": {
+        "summary": "Update User",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID do usuário",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "examples": {
+                "User": {
+                  "value": {
+                    "name": "Updated Name",
+                    "email": "updated@test.com",
+                    "password": "newpassword"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Token not provided || You can only edit your own data"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "200": {
+            "description": "User has been updated successfully"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/users/": {
+      "get": {
+        "summary": "List Users",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "200": {
+            "description": "List of users"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get User by ID",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "200": {
+            "description": "User found"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/users/delete/{id}": {
+      "delete": {
+        "summary": "Delete User by ID",
+        "tags": [
+          "Users"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "204": {},
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/products/": {
+      "get": {
+        "summary": "List Products",
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "200": {
+            "description": "List of products"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "summary": "Get Product by ID",
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "200": {
+            "description": "Product found"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    },
+    "/products/create": {
+      "post": {
+        "summary": "Create Product",
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              },
+              "examples": {
+                "Product": {
+                  "value": {
+                    "name": "Product Name",
+                    "description": "Product description",
+                    "price": 50.00,
+                    "stock_quantity": 500
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "409": {
+            "description": "Product already exists"
+          },
+          "201": {
+            "description": "Product has been created successfully"
+          },
+          "400": {
+            "description": "Field validation error"
+          }
+        }
+      }
+    },
+    "/products/update/{id}": {
+      "put": {
+        "summary": "Update Product",
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Product"
+              },
+              "examples": {
+                "Product": {
+                  "value": {
+                    "name": "Updated Product Name",
+                    "description": "Updated product description",
+                    "price": 29.99,
+                    "stock_quantity": 1000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "200": {
+            "description": "Product has been updated successfully"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "400": {
+            "description": "Field validation error"
+          }
+        }
+      }
+    },
+    "/products/delete/{id}": {
+      "delete": {
+        "summary": "Delete Product by ID",
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearerAuth": [],
+            "userType": [
+              "ADMIN"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Token not provided"
+          },
+          "403": {
+            "description": "Your user type has no permission to do this."
+          },
+          "204": {},
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number"
+          },
+          "stock_quantity": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
