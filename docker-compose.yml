@@ -11,3 +11,21 @@ services:
     volumes:
       - .:/usr/app
     network_mode: host
+  db:
+    image: postgres:11-alpine
+    container_name: challengeDatabaseContainer
+    restart: always
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: America/Sao_Paulo
+
+    volumes:
+      - pgdata:/data/postgres
+    network_mode: host
+volumes:
+  pgdata:
+    driver: local
