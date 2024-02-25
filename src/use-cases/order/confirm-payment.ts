@@ -29,6 +29,7 @@ export class ConfirmPaymentUseCase {
     }
 
     // Verificando se há tipos diferentes de produtos no pedido
+    // utilizo set para armazenar os ids dos produtos de forma única
     const uniqueProductIds = new Set(
       orderItems.map((orderItem) => orderItem.product_id),
     )
@@ -36,8 +37,9 @@ export class ConfirmPaymentUseCase {
     if (uniqueProductIds.size > 1) {
       // Se houver tipos diferentes de produtos
       const totalQuantityByProductId: Record<string, number> = {}
-
-      for (const orderItem of orderItems) {
+      // ---------------------------------------------------------------------------------------------------------------------------
+      orderItems.map(async (orderItem) => {
+        // Se não existir a chave no objeto, crio ela e seto o valor como 0
         if (!totalQuantityByProductId[orderItem.product_id]) {
           totalQuantityByProductId[orderItem.product_id] = 0
         }
@@ -55,9 +57,10 @@ export class ConfirmPaymentUseCase {
         if (orderItem.quantity > product.stock_quantity) {
           throw new InsufficientStockError()
         }
-      }
-
-      for (const productId in totalQuantityByProductId) {
+      })
+      // ---------------------------------------------------------------------------------------------------------------------------
+      // retorno um array com as chaves do objeto
+      Object.keys(totalQuantityByProductId).map(async (productId) => {
         const quantity = totalQuantityByProductId[productId]
         const product = await this.productRepository.findById(productId)
         if (!product) {
@@ -70,10 +73,11 @@ export class ConfirmPaymentUseCase {
         } else {
           throw new PaymentNotApprovedError()
         }
-      }
+      })
     } else {
+      // ---------------------------------------------------------------------------------------------------------------------------
       // Se for o mesmo tipo de produto
-      for (const orderItem of orderItems) {
+      orderItems.map(async (orderItem) => {
         const product = await this.productRepository.findById(
           orderItem.product_id,
         )
@@ -85,7 +89,7 @@ export class ConfirmPaymentUseCase {
         if (orderItem.quantity > product.stock_quantity) {
           throw new InsufficientStockError()
         }
-      }
+      })
 
       if (pagamentoSimuladoAprovado) {
         const quantity = orderItems.reduce(
