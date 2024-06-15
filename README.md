@@ -19,6 +19,7 @@
 - Docker
 - AWS S3
 - PrismaORM
+- Vitest
 
 <h2 id="started">🚀 Getting started</h2>
 
